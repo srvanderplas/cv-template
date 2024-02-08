@@ -1,0 +1,158 @@
+%!TEX root = SusanVanderplas-CV.tex
+% ------------------------------------------------------------------------------
+% CV personal references
+\newcommand{\cvreferencecolumn}[2]{%
+  \cvitem[0.8em]{}{%
+    \begin{minipage}[t]{\listdoubleitemmaincolumnwidth}#1\end{minipage}%
+    \hfill%
+    \begin{minipage}[t]{\listdoubleitemmaincolumnwidth}#2\end{minipage}%
+    }%
+}
+
+\newcommand{\cvreference}[8]{%
+    \textbf{#1}\newline% Name
+    \ifthenelse{\equal{#2}{}}{}{\addresssymbol~#2\newline}%
+    \ifthenelse{\equal{#3}{}}{}{#3\newline}%
+    \ifthenelse{\equal{#4}{}}{}{#4\newline}%
+    \ifthenelse{\equal{#5}{}}{}{#5\newline}%
+    \ifthenelse{\equal{#6}{}}{}{\emailsymbol~\texttt{\href{mailto:#6}{\nolinkurl{#6}}}\newline}%
+    \ifthenelse{\equal{#7}{}}{}{\phonesymbol~#7\newline}
+    \ifthenelse{\equal{#8}{}}{}{\mobilephonesymbol~#8}}
+%-------------------------------------------------------------------------------
+% Numeric CV bibliography
+\newif\ifnumericCVbibliography
+\numericCVbibliographytrue % replace true with false to disable
+\newlength{\hintscolumnwidthV}
+\setlength\hintscolumnwidthV{\hintscolumnwidth}
+\newlength{\labelkern}
+\ifnumericCVbibliography
+  \setlength\labelkern{-2ex}
+  \usepackage[backend = biber,
+              style   = authoryear-comp, 
+              defernumbers,
+              sorting = none,
+              maxbibnames=99
+             ]{biblatex}  
+  \newcounter{bibitemtotal}
+  \newrobustcmd*{\mkbibdesc}[1]{%
+  \number\numexpr\value{bibitemtotal}+1-#1\relax}
+  \DeclareFieldFormat{labelnumber}{\mkbibdesc{#1}}
+  \DeclareFieldFormat{labelnumberwidth}{#1}
+  \newcommand{\printbibnumber}{%\hspace* here has no effect so I removed it
+      \llap{\printtext[labelnumberwidth]{%
+              \printfield{labelprefix}%
+              \printfield{labelnumber}.
+              }\kern\labelkern% to reduce space between label and timeline image
+            }%
+  }                                  
+  \makeatletter
+    \patchcmd{\blx@printbibliography}
+      {\blx@bibliography\blx@tempa}
+      {\setcounter{bibitemtotal}{0}%
+       \setlength{\labelnumberwidth}{0pt}%
+       \begingroup
+       \def\do##1{\stepcounter{bibitemtotal}}%
+       \dolistloop{\blx@tempa}%
+       \endgroup
+       \blx@setlabwidth{\labelnumberwidth}{%
+         \csuse{abx@ffd@*@labelnumberwidth}{\arabic{bibitemtotal}}}%
+       \blx@bibliography\blx@tempa}
+      {}{}
+  \makeatother
+\else
+  \usepackage[backend = biber,
+              style   = authoryear, 
+              sorting = none,
+              dashed = false,
+              firstinits = true,
+              maxbibnames=99
+             ]{biblatex}  
+  \newcommand{\printbibnumber}{\relax} % do nothing   
+  \setlength\labelkern{0ex} 
+  \setlength\hintscolumnwidthV{\hintscolumnwidth} % this length needs 
+  % to be re-set or it keeps the numeric version value if that has been run before   
+\fi
+\DeclareNameAlias{sortname}{last-first}
+\addbibresource{\jobname.bib} 
+%-------------------------------------------------------------------------------
+% bold author names in bibliography
+\renewcommand*{\mkbibnamegiven}[1]{%
+  \ifitemannotation{highlight}
+    { \textbf{#1} }
+    { #1\ifitemannotation{student}
+        {$^\ast$}
+        {} 
+    }
+}
+\renewcommand*{\mkbibnamefamily}[1]{%
+  \ifitemannotation{highlight}
+    {\textbf{#1}}
+    {#1}}
+% ------------------------------------------------------------------------------
+% Introductory notes for papers
+\makeatletter
+\newcommand*{\intronote}[2]{%
+  \csdef{cbx@#1@intronote}{#2}%
+}
+\renewbibmacro*{begentry}{%
+  \ifcsdef{cbx@\thefield{entrykey}@intronote}{%
+    \textit{\csuse{cbx@\thefield{entrykey}@intronote}}\addperiod\space\newline
+  }{%
+  }%
+}
+\renewbibmacro*{date}{\setunit{\addspace}\printdate}
+\makeatother
+% ------------------------------------------------------------------------------
+% Notes at the end and hopefully on a new line and in footnotesize
+\DeclareFieldFormat{addendum}{\newline{\footnotesize\textbf{Contribution:}\addspace#1}}
+
+%-------------------------------------------------------------------------------
+% timeline for bibliography
+\makeatletter 
+\newcommand*{\cventryV}[1][.25em]{}
+\newcommand{\tldatecventryV}[2][color1]{%
+\issincefalse
+\tl@formatstartyear{#2}
+\cventryV{\tikz[baseline=0pt]{
+    \useasboundingbox (0ex,0ex) rectangle (\hintscolumnwidthV,1ex); 
+    %changed origin of boundingbox. previous was (2ex,0ex) but this 
+    % creates alignment problems when switching between numeric and non numeric.
+    \fill [\tl@runningcolor] (0,0)
+       rectangle (\hintscolumnwidthV,\tl@runningwidth);
+    \fill [#1] (0,0)
+       ++(\tl@startfraction*\hintscolumnwidthV,0pt)
+       node [tl@singleyear] {#2}
+       node {$\bullet$};
+  }}}
+\makeatother
+
+\defbibenvironment{bibliography}
+  {\list
+   {\printbibnumber% here you see the macro in action
+    \tldatecventryV{%
+      \thefield{year} % actual year from bibitem
+       }}
+       {%     
+        \setlength{\topsep}{0pt}% layout parameters based on moderncvstyleclassic.sty      
+        \addtolength\hintscolumnwidthV{-\labelnumberwidth}% num - changes timeline image length
+        \addtolength\hintscolumnwidthV{\labelkern}% num  - changes timeline image length
+        \setlength{\bibhang}{\hintscolumnwidthV} % custom bibhang
+        \setlength{\labelsep}{\separatorcolumnwidth} %  horizontal distance between label and entry
+        \setlength{\leftmargin}{\hintscolumnwidth} % sets where the left margin is 
+        \addtolength{\leftmargin}{\separatorcolumnwidth} %
+        \setlength{\itemindent}{-\bibhang} % this sets indentation of the second line of the entry. 
+        % changing it moves also the first line left or right
+        \addtolength{\itemindent}{-\separatorcolumnwidth} % to align the second line exactly
+        \setlength{\itemsep}{\bibitemsep} % vertical distance between bib items
+        \setlength{\parsep}{\bibparsep}}}
+  {\endlist}
+  {\item}    
+
+% reverse numbering of publications
+% Count total number of entries in each refsection
+\AtDataInput{%
+  \csnumgdef{entrycount:\strfield{keyword}}{%
+    \csuse{entrycount:\strfield{keyword}}+1}}
+%-------------------------------------------------------------------------------
+\makeatletter\renewcommand*{\bibliographyitemlabel}{\@biblabel{\arabic{enumiv}}}\makeatother
+

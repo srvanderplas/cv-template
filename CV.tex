@@ -1,0 +1,122 @@
+\documentclass[11pt, letterpaper, sans]{moderncv}
+\moderncvstyle{classic}
+\moderncvcolor{blue}
+
+% \usepackage[utf8]{inputenc}
+\usepackage[scale=0.85]{geometry}    % Width of the entire CV
+% \setlength{\hintscolumnwidth}{1.5in} % Width of the timeline on your left
+\usepackage{pdfpages}
+\usepackage{moderntimeline}
+\usepackage{xpatch}
+\usepackage{color, graphicx}
+\usepackage[unicode]{hyperref}
+\usepackage{xcolor}
+\definecolor{link}{HTML}{295686}
+\hypersetup{colorlinks, breaklinks,
+            linkcolor=link,
+            urlcolor=link,
+            citecolor=link}
+\usepackage{varwidth}
+\usepackage[normalem]{ulem}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{doi}% suppose to force DOI as verbatim
+
+\clubpenalty=500
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% New commands
+\input{tex/tweaks.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bib Info
+
+\addbibresource{\jobname.bib}
+
+% \intronote{bibtexkey}{... note text...} can be used to place comments before a bibliography entry
+% \intronote{donohoresponse}{Submitted as an invited response to Donoho's ``50 years of Data Science"}
+
+% \DeclareFieldFormat{date}{\textbf{#1}}
+% \renewbibmacro*{date}{\printtext[date]{\printdate}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Personal Information/Other Options
+\tlmaxdates{2008}{2026}              % Beginning and start of your timeline
+
+% Personal Information
+\name{Susan}{Vanderplas}
+\title{\emph{Curriculum Vitae}}
+\address{343D Hardin Hall North Wing}{3310 Holdrege Street}{Lincoln, NE 68483-0961}
+\phone[office]{402-472-7290}
+% \phone[mobile]{515-509-6613}
+%\phone[fixed]{+55~(11)~3091~2722}
+\email{susan.vanderplas@unl.edu}
+% \homepage{srvanderplas.com}                   % optional, remove / comment the line if not wanted
+%\social[linkedin]{}                          % optional, remove / comment the line if not wanted
+% \social[twitter]{srvanderplas}               % optional, remove / comment the line if not wanted
+\social[github]{srvanderplas}                 % optional, remove / comment the line if not wanted
+%\extrainfo{\emailsymbol \emaillink{}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\makecvtitle
+
+
+if(exist('_edu.tex')) {
+\section{Education}
+\input{_edu.tex}
+\medskip
+}
+
+if(exist('_exp.tex')) {
+\section{Professional Experience}
+\input{_exp.tex}
+\medskip
+}
+
+if(exist(\jobname.bib)) {
+\section{Publications}
+% You can use \cvitem{}{} to include a note before your publication list, if you want.
+% this says include everything in the bib file
+\nocite{*}
+% This filters publications so that only those with the pr keyword are included
+\printbibliography[heading=subbibliography,keyword=pr,title={Peer Reviewed Publications}]
+\smallskip
+% This filters publications so that only those with the npr keyword are included
+\printbibliography[heading=subbibliography,keyword=npr,resetnumbers=true,title={Other Publications}]
+\medskip
+% This is useful if you want to list in progress papers (e.g. submitted, but not accepted)
+% \cvitem{In Progress}{
+%     \begin{description}
+%     \item [title] description
+%     \end{description}
+% }
+\medskip
+}
+if(exist('_grants.tex')) {
+\section{Grants}
+\input{_grants.tex}
+\medskip
+}
+
+if(exist('_talks.tex')) {
+\section{Talks}
+\input{_talks.tex}
+\medskip
+}
+
+if(exist('_software.tex')) {
+\section{Software}
+\cvitem{}{\footnotesize Dates show initial involvement; only packages which are no longer maintained have end dates.}
+\input{_software.tex}
+\medskip
+}
+
+if(exist('_teaching.tex')) {
+\section{Teaching}
+\input{_teaching.tex}
+}
+
+\end{document}
