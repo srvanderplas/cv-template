@@ -7,12 +7,14 @@ An example/template can be found [here](https://docs.google.com/spreadsheets/d/1
 - [bib file of publications](CV.bib)
 - CV TeX file
 
+CV templates from overleaf for `moderncv` and `moderntimeline` are provided in templates. `CV.tex` is a highly modified form of the `moderntimeline` template.
+
 ## Software required
 
-- latexmk
-- xelatex
-- biber
-- moderncv and moderntimeline latex packages
+- `latexmk` (comes with texlive/tinytex)
+- `xelatex`
+- `biber`
+- `moderncv` and `moderntimeline` latex packages
 
 
 ## How it works
