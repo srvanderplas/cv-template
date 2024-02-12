@@ -41,7 +41,7 @@
 % \renewbibmacro*{date}{\printtext[date]{\printdate}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Personal Information/Other Options
-\tlmaxdates{2008}{2026}              % Beginning and start of your timeline
+\tlmaxdates{2005}{2019}% Beginning and end of your timeline
 
 % Personal Information
 \name{Susan}{Vanderplas}
@@ -64,19 +64,11 @@
 \makecvtitle
 
 
-if(exist('_edu.tex')) {
-\section{Education}
-\input{_edu.tex}
-\medskip
-}
+\IfFileExists{./\_edu.tex}{\input{_edu.tex}}
 
-if(exist('_exp.tex')) {
-\section{Professional Experience}
-\input{_exp.tex}
-\medskip
-}
+\IfFileExists{./\_exp.tex}{\input{_exp.tex}}
 
-if(exist(\jobname.bib)) {
+\IfFileExists{./\jobname.bib}{
 \section{Publications}
 % You can use \cvitem{}{} to include a note before your publication list, if you want.
 % this says include everything in the bib file
@@ -95,28 +87,22 @@ if(exist(\jobname.bib)) {
 % }
 \medskip
 }
-if(exist('_grants.tex')) {
-\section{Grants}
-\input{_grants.tex}
-\medskip
-}
 
-if(exist('_talks.tex')) {
-\section{Talks}
-\input{_talks.tex}
-\medskip
-}
+\IfFileExists{./\_software.tex}{\input{_software.tex}}
 
-if(exist('_software.tex')) {
-\section{Software}
-\cvitem{}{\footnotesize Dates show initial involvement; only packages which are no longer maintained have end dates.}
-\input{_software.tex}
-\medskip
-}
+\IfFileExists{./\_grants.tex}{\input{_grants.tex}}
 
-if(exist('_teaching.tex')) {
-\section{Teaching}
-\input{_teaching.tex}
-}
+\IfFileExists{./\_awards.tex}{\input{_awards.tex}}
+
+\IfFileExists{./\_talks.tex}{\input{_talks.tex}}
+
+\IfFileExists{./\_teaching.tex}{\input{_teaching.tex}}
+
+\IfFileExists{./\_practice.tex}{\input{_practice.tex}}
+
+\IfFileExists{./\_mentoring.tex}{\input{_mentoring.tex}}
+
+\IfFileExists{./\_service.tex} {\input{_service.tex}}
+
 
 \end{document}

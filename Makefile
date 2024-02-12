@@ -5,11 +5,14 @@
 # This defines the final output file you intend to make use of
 default: CV.pdf
 
+# These are the R scripts which are used to make the components
+R_FILES = code/build_functions.R code/build_tex_files.R
+
 # These are essential prerequisites that have to be updated
-COMPONENTS = _edu.tex _talks.tex _grants.tex _software.tex _teaching.tex _mentoring.tex
+COMPONENTS = _edu.tex _exp.tex _awards.tex _grants.tex _software.tex _talks.tex _teaching.tex _service.tex
 
 # This command creates the components
-$(COMPONENTS): build_functions.R build_tex_files.R
+$(COMPONENTS): $(R_FILES)
 	Rscript "code/build_tex_files.R"
 	echo 'Component files built'
 
