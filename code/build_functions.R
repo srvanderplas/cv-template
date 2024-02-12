@@ -51,18 +51,28 @@ make_heading <- function(heading_name, heading_type = "subsection") {
 #' @param ... other arguments passed to make_XXentry functions
 #' @return a vector of latex codes to handle dates within moderncv
 #' @importFrom dplyr case_when
-make_dates <- function(datenames, span = T, timeline = T, ...) {
+make_dates <- function(datenames, labelname = NULL, span = T, timeline = T, ...) {
   stopifnot(is.logical(span))
   stopifnot(is.logical(timeline))
   stopifnot(length(datenames) %in% c(1, 2))
   stopifnot(is.character(datenames))
   
-  ifelse(timeline, {
-    ifelse(span, make_tlcventry(datenames, ...), make_tldatecventry(datenames, ...))
-  }, {
-    ifelse(span, make_cventry(datenames, ...), make_cventry(datenames[1], ...))
-  })
+    ifelse(timeline, {
+      ifelse(is.null(labelname), {
+        ifelse(span, 
+               make_tlcventry(datenames, ...), 
+               make_tldatecventry(datenames, ...))
+      }, {
+        ifelse(span, 
+               make_tllabelcventry(datenames, labelname, ...), 
+               make_tldatelabelcventry(datenames, labelname, ...))
+      })
+    }, {
+      ifelse(span, make_cventry(datenames, ...), make_cventry(datenames[1], ...))
+    })
+    
 }
+
 fix_year <- function(x, get_year = F) {
   if (get_year) {
     paste("{ year(", x, ") }")
@@ -70,26 +80,31 @@ fix_year <- function(x, get_year = F) {
     paste("{ ", x, " }")
   }
 }
+
 collapse_dates <- function(datenames, collapse = "", ...) {
   datenames2 <- fix_year(datenames, ...)
   paste0("{{", paste(datenames2, collapse = collapse, sep = ""), "}}")
 }
+
 collapse_labels <- function(labelname, ...) {
   paste0("{{ {", labelname, "} }}")
 }
+
 make_tlcventry <- function(datenames, ...){
   stopifnot(length(datenames) == 2)
   paste0("\\tlcventry", 
          collapse_dates(datenames, collapse = "}}{{", ...)
   )
 }
-make_tldatelabelcventry <- function(datenames, labelname, verbose = F, ...){
+
+make_tllabelcventry <- function(datenames, labelname, ...){
   stopifnot(length(datenames) == 2)
-  paste0("\\tldatelabelcventry", 
+  paste0("\\tllabelcventry", 
          collapse_labels(labelname, ...),
          collapse_dates(datenames, collapse = "}}{{", ...)
   )
 }
+
 make_tldatecventry <- function(datenames, verbose = F, ...){
   if(length(datenames) > 1) {
     if (verbose) warning("Using only first date name")
@@ -97,10 +112,23 @@ make_tldatecventry <- function(datenames, verbose = F, ...){
   }
   paste0("\\tldatecventry", collapse_dates(datenames, ...))
 }
+
+make_tldatelabelcventry <- function(datenames, labelname, verbose = F, ...){
+  if(length(datenames) > 1) {
+    if (verbose) warning("Using only first date name")
+    datenames <- datenames[1]
+  }
+  paste0("\\tldatelabelcventry", 
+         collapse_labels(labelname, ...),
+         collapse_dates(datenames, ...)
+  )
+}
+
 make_cventry <- function(datenames, span, ...) {
   coll <- ifelse(length(datenames) == 2, "--", "")
   paste0("\\cventry", collapse_dates(datenames, collapse = coll, ...))
 }
+
 
 #' Clean NA fields from latex code
 #' 
